@@ -1,0 +1,68 @@
+<div fxLayout="column" fxFlexFill fxLayoutAlign="center center" class="login-container">
+  <mat-card fxFlexOffset="-15">
+    <h1 class="title" fxLayoutAlign="center center">
+      UrlShortener
+    </h1>
+    <mat-tab-group #matTabGroup mat-align-tabs="center"
+                   [(selectedIndex)]="tabSelectedIndex"
+                   (selectedTabChange)="onTabChange()">
+      <mat-tab fxLayoutAlign="center center" label="Login">
+        <form
+              fxLayout="column"
+              fxLayoutAlign="space-around center"
+              [formGroup]="loginForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username">
+            <mat-hint *ngIf="loginForm.get('username')?.hasError('minlength')">Username must have at least 8 characters</mat-hint>
+            <mat-error>Username must have at least 8 characters</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-hint *ngIf="loginForm.get('password')?.hasError('minlength')">Username must have at least 8 characters</mat-hint>
+            <mat-error>Username must have at least 8 characters</mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  (click)="onLogin()"
+                  [disabled]="loginForm.invalid">Login</button>
+          <mat-error *ngIf="loginForm.hasError('bad-credentials')">Invalid credentials!</mat-error>
+        </form>
+      </mat-tab>
+      <mat-tab label="Register">
+        <form
+          fxLayout="column"
+          fxLayoutAlign="space-around center"
+          [formGroup]="registerForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username">
+            <mat-hint *ngIf="registerForm.get('username')?.hasError('minlength')">Username must have at least 8 characters</mat-hint>
+            <mat-error *ngIf="!registerForm.get('username')?.hasError('username-taken')">Username must have at least 8 characters</mat-error>
+            <mat-error *ngIf="registerForm.get('username')?.hasError('username-taken')">Username taken</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-hint *ngIf="registerForm.get('password')?.hasError('minlength')">Username must have at least 8 characters</mat-hint>
+            <mat-error>Username must have at least 8 characters</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Repeat password</mat-label>
+            <input matInput type="password" formControlName="passwordCheck">
+            <mat-error>Passwords do not match</mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  (click)="onRegister()"
+                  [disabled]="registerForm.invalid">Register</button>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>
