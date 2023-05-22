@@ -1,18 +1,21 @@
-FROM node:latest as build
+FROM node:14-alpine as builder
 
-WORKDIR /usr/local/app
+WORKDIR /app
 
-COPY ./ /usr/local/app/
+COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
-RUN npm run build
+COPY . .
 
-FROM nginx:latest
+RUN npm run build -- --prod
 
-COPY --from=build /usr/local/app/dist/cc-express-frontend /usr/share/nginx/html
-COPY ./nginx.conf ./conf.d/default.conf
+FROM nginx:1.21-alpine
+
+COPY --from=builder /app/dist/cc-express-frontend /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-ENTRYPOINT [ "nginx" ]
-CMD [ "-g", "daemon off;" ]
+
+CMD ["nginx", "-g", "daemon off;"]
